@@ -49,7 +49,7 @@ bool MySi114x::configureChip()
 		ALS_IR_ADCMUX, SMALL_IR,
 		//AUX_ADCMUX, TEMPERATURE,			// AUX is used for UV Index, EN_UV
 
-		/*
+		/* To compare TEMPERATURE readings
 		// MUX selection, see diagram p28
 		PS1_ADCMUX, TEMPERATURE,
 		PS2_ADCMUX, TEMPERATURE,
@@ -58,12 +58,7 @@ bool MySi114x::configureChip()
 		ALS_IR_ADCMUX, SMALL_IR,
 		AUX_ADCMUX, TEMPERATURE,
 		*/
-
-		//TODO LARGE_IR on PS1..PS3
-		//TODO do we need GND_VOLTAGE, VDD_VOLTAGE?
-		//TODO how to use TEMPERATURE?
-		//TODO re-enable UV index
-
+	
 		// no PS LEDs
 		PSLED12_SELECT, 0,
 
