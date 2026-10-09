@@ -47,7 +47,7 @@ For motion detection you'll need an Si1146 (with 2 x IR LEDs), and for gesture d
 
 Here is the diagram from the data sheet. Each ADC conversion has a multiplexer (MX) to select the input, configurable ADC conversion, and finally a Sum operation wch adds an offset of 256 to the reading. The AUX_ADCMUX at he bootom has no configuration, and only the VDD and Temperature inputs can be selected - or the AUX data registers are used for the UV Index value (not shown on the diagram). 
 
-The diagram makes it look as though there are 6 ADCs. In reality I think there is only one. Readings are not taken simultaneously, they are take sequentially.
+The diagram makes it look as though there are 6 ADCs. In reality I think there is only one. Readings are not taken simultaneously, they are taken sequentially.
 
 <img src="assets/si114x-signal-path.png" alt="Si114x Signal Path Diagram">
 
