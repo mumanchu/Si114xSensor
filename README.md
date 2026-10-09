@@ -8,13 +8,13 @@ The data sheet says, "Integrated UV index sensor". That is not true. It estimate
 
 I updated this old code for the Arduino architecture while playing with UV Sensors. Maybe someone is interested. 
 
-Below are some technical details, do read the Data Sheet first to get an overview. Page number 'p28' refer to version 1.3 (12/14) of the data sheet. \
+Below are some technical details, so read the Data Sheet first to get an overview. Page numbers, e.g. p28, refer to this version 1.3 (12/14) of the data sheet. \
 https://www.waveshare.com/w/upload/9/99/Si1145-46-47.pdf
 
 ALS = Ambient Light Sensor : VIS = Visible Light, IR = Infrared
 PS = Position Sensor
 
-## Advantages of This Antique Library
+## Advantages of this Antique Library
 
 Unlike most of the other old Si114x libraries, this code adjusted the raw measurements using the gain, range setting and 16/17 bit alignment, using `getNormalisedMeasurements()`. Thus the LUX and other calculations 
 were adapted according to the configuration, and the `automaticGainControl()` feature used normalized measurements. 
@@ -29,17 +29,19 @@ The default is **MS 16 bits**. This means that the raw values should all be mult
 
 ## Postion Sensing
 
-This library does not handle position sensing. Only the ambient light, IR sensor and UV Index are enabled. If you want to add proximity sensing, Silicon Labs has example code for gesture sensing in this file,
+This library does not handle position sensing. Only the ambient light, IR sensor and UV Index are enabled. If you want to add proximity sensing, Silicon Labs has example code for gesture sensing in this file, \
 https://github.com/x893/SX1231/blob/master/SX12xxDrivers-2.0.0/src/platform/efm32libs/kits/common/drivers/si114x_algorithm.c
 
-The Si1145 supports one IR LED for proximity only. If it's only proximity sensing that you need, use a cheap IR reflective sensor like the TCRT5000, 
+The Si1145 supports one IR LED for proximity only. If it's only proximity sensing that you need, use a cheap IR reflective sensor like the TCRT5000, \
 https://muman.ch/muman/index.htm?muman-infrared-reflective-sensor.htm
 
-For motion detection you'll need an Si1146 (with 2 x IR LEDs), and for gesture detection you'll need an Si1147 (with 3 x IR LEDS). But there are more recent and better chips out there for this, even using radar signals.
+For motion detection you'll need an Si1146 (with 2 x IR LEDs), and for gesture detection you'll need an Si1147 (with 3 x IR LEDS). But there are more recent and better chips out there for this, even using radar signals. There will be a muman.ch blog post about these soon.
 
 ## Input Selection and Configuration
 
 TODO p28 signal path diagram
+
+
 
 ## AUX MUX
 
@@ -151,3 +153,16 @@ seem to handle the 16/17 bit alignment.
 https://github.com/adafruit/Adafruit_SI1145_Library
 https://github.com/wollewald/SI1145_WE/tree/master
 https://github.com/HGrabas/SI1145/tree/master
+
+
+## Revision History
+
+| Date  | Revision | Description |
+|:---------- |:---------|:----------- |
+| 2026.10.09 | 0.0.0	| Preiminary |
+
+<br/>
+
+## Joke of the Week
+
+
