@@ -80,7 +80,7 @@ For MS 16 bits, the result is set to 0xFFFF if above **0x3FFF**. For LS 16 bits,
 
 The 16/17 bit setting must be taken into account when doing automatic gain control.
 
-## Grey Areas
+## Gray Areas
 
 There were a lot of unanswered questions with this chip. For example, go to p51 (AREA51). I'm sure it has nothing to do with The Grays.
 
@@ -155,7 +155,7 @@ public:
 
 To avoid modifying the library file, and to provide a kind of configuration template, a class can be derived from Si114xSensor and the `configureChip()` method is overridden in the derived class. The derived class also adds calculation of the `pollTime` value so it does not poll the chip faster than is necessary when waiting for new readings.
 
-These are illustrated in the example sketch. 
+These features are illustrated in the example sketch. 
 
 
 ## References
