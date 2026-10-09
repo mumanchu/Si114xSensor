@@ -27,13 +27,21 @@ Unlike most of the other old Si114x libraries, this code adjusts the raw measure
 
 It is also non-blocking, polling the `IRQ_STATUS` register or INT pin to determine when readings were ready.
 
+## Installing the Library with the Arduino IDE
+
+First, download the latest library Zip file with the green button, "<> Code / Download Zip". This creates a file called "Si114xSensor-main.zip" in your Downloads directory.
+
+Now open the Arduino IDE. Select menu item "Sketch / Include Library > Add ZIP Library...". This opens the "Select ZIP File" window. Open the Downloads directory and choose the "Si114xSensor-main.zip" file you just downloaded. You should see a "Successfully installed library" popup on the bottom right.
+
+To open the example sketch, select menu item "File > Examples" and scroll down beyond "Examples from Custom Libraries" and select the "Si114xSensor > Si114xSensor" entry. This opens the "Si114XSensor.ino" example sketch in a new Arduino IDE window.
+
 ## 16 or 17-Bit Encoding
 
 The ADC is 17-bits, but the measurement registers only hold 16-bits. So it must be configured to copy either the MS or the LS 16 bits from the ADC into the measurement registers by using the `PS_ENCODING` and `AS_ENCODING` parameters. 
 
 The default is **MS 16 bits**. This means that the raw values should all be multiplied by 2 (shift left 1). This setting must be taken into account when using the raw measurements. This could be why some users were complaining about the readings being too high.
 
-## Position Sensing
+## Proximity Sensing
 
 This library does not handle proximity, motion or gesture sensing. Only the ambient light, IR sensor and UV Index are enabled. If you want to add proximity sensing, Silicon Labs has example code for full gesture sensing in this file, \
 https://github.com/x893/SX1231/blob/master/SX12xxDrivers-2.0.0/src/platform/efm32libs/kits/common/drivers/si114x_algorithm.c
