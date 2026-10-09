@@ -49,7 +49,10 @@ bool MySi114x::configureChip()
 		ALS_IR_ADCMUX, SMALL_IR,
 		//AUX_ADCMUX, TEMPERATURE,			// AUX is used for UV Index, EN_UV
 
-		/* To compare TEMPERATURE readings
+		/* To test TEMPERATURE
+		// Enable channels
+		CHLIST, EN_PS1 | EN_PS2 | EN_PS3 | EN_ALS_VIS | EN_ALS_IR | EN_AUX,
+
 		// MUX selection, see diagram p28
 		PS1_ADCMUX, TEMPERATURE,
 		PS2_ADCMUX, TEMPERATURE,
