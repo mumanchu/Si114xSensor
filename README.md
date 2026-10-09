@@ -207,5 +207,5 @@ https://github.com/HGrabas/SI1145/tree/master \
 Pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679... \
 Shepherd's Pi = 3
 
-Homework: Define the physical characteristics of a universe in which Pi is an integer.
+_Homework: Define the physical characteristics of a universe in which Pi is an integer._
 
