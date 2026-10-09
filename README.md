@@ -13,7 +13,7 @@ https://de.aliexpress.com/item/1005012309826317.html
 
 The Silicon Labs data sheet says, "Integrated UV index sensor". That is not quite true. It estimates the UV Index from the ambient light and infrared sensor readings.
 
-I updated this old code for the Arduino architecture while playing with UV Sensors. Maybe someone is interested (but probably not). 
+I updated my old code for the Arduino architecture while playing with UV Sensors. Maybe someone is interested (but probably not). 
 
 Below are some technical details, so read the Data Sheet first to get an overview. Page numbers, e.g. p28, refer to this version of the data sheet, Rev. 1.3 (12/14). \
 https://www.waveshare.com/w/upload/9/99/Si1145-46-47.pdf
