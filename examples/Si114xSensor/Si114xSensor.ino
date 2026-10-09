@@ -2,7 +2,7 @@
 // Example Sketch for Si114xSensor Library
 // Copyright (C) 2026.10.09, https://muman.ch and https://github.com/mumanchu
 // If you re-use this software, please include the above copyright notice
-// (and wire me a large pile of cash ;-)
+// (and wire me a huge pile of cash ;-)
 
 #include <Wire.h>
 
