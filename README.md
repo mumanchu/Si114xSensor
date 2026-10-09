@@ -1,5 +1,5 @@
 # Si114xSensor : Arduino Library for Si1145/6/7 
-ALS, IR and Proximity/Motion/Gesture Sensor, with on-chip UV Index calculation.
+Silicon Labs ALS, IR and Proximity/Motion/Gesture Sensor, with on-chip UV Index calculation.
 
 > [!NOTE]
 > The Silicon Labs Si144x chips are now discontinued and are no longer manufactured. (So it's not recommended for new designs :-)
