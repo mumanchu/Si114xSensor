@@ -41,7 +41,7 @@ public:
 		PARAM_RD = 0x2E,
 		PARAM_WR = 0x17,
 		COMMAND = 0x18,
-		RESPONSE = 0x20,		// ugh!
+		RESPONSE = 0x20,
 		CHIP_STAT = 0x30,		// running, suspended, sleeping, wandering about in a daze
 		// Measurement registers
 		IRQ_STATUS = 0x21,
@@ -384,8 +384,6 @@ MySi114x si1145;
 bool Si114xSensor::begin(TwoWire* twoWire)
 {
 	wire = twoWire;
-
-	//TODO here or in constructor?
 	partId = 0;
 	errorCode = NO_ERROR;
 	overflowError = NO_ERROR;
