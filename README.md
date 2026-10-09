@@ -23,7 +23,7 @@ PS = Position Sensor
 
 ## Advantages of this Antique Library
 
-_Unlike_ most of the other old Si114x libraries, this code adjusts the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapt themselves according to the configuration, and the `automaticGainControl()` feature uses normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
+Unlike most of the other old Si114x libraries, this code adjusts the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapt themselves according to the configuration, and the `automaticGainControl()` feature uses normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
 
 It is also non-blocking, polling the `IRQ_STATUS` register or INT pin to determine when readings were ready.
 
