@@ -2,7 +2,8 @@
 ALS, IR and Proximity/Motion/Gesture Sensor, with on-chip UV Index calculation.
 
 > [!NOTE]
-> The Silicon Labs Si144x chips are now discontinued (not manufactured). They do not contain a UV Sensor, the UV Index is estimated.
+> The Silicon Labs Si144x chips are now discontinued and are no longer manufactured. (So it's not recommended for new designs :-)
+> They also do not contain a UV Sensor, the UV Index is an estimation calculated by the on-chip DSP.
 
 But you can still buy breakout boards like this one on AliExpress, from Shenzhen Module Studio Ltd (CHF 14.-) \
 https://de.aliexpress.com/item/1005012309826317.html
@@ -12,9 +13,9 @@ https://de.aliexpress.com/item/1005012309826317.html
 
 The Silicon Labs data sheet says, "Integrated UV index sensor". That is not quite true. It estimates the UV Index from the ambient light and infrared sensor readings.
 
-I updated this old code for the Arduino architecture while playing with UV Sensors. Maybe someone is interested. 
+I updated this old code for the Arduino architecture while playing with UV Sensors. Maybe someone is interested (but probably not). 
 
-Below are some technical details, so read the Data Sheet first to get an overview. Page numbers, e.g. p28, refer to this version 1.3 (12/14) of the data sheet. \
+Below are some technical details, so read the Data Sheet first to get an overview. Page numbers, e.g. p28, refer to this version fo the data sheet, 1.3 (12/14). \
 https://www.waveshare.com/w/upload/9/99/Si1145-46-47.pdf
 
 ALS = Ambient Light Sensor : ALS_VIS = Visible Light, ALS_IR = Infrared
@@ -22,7 +23,7 @@ PS = Position Sensor
 
 ## Advantages of this Antique Library
 
-Unlike most of the other old Si114x libraries, this code adjusted the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapted according to the configuration, and the `automaticGainControl()` feature used normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
+Unlike most of the other old Si114x libraries, this code adjusted the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapted themselves according to the configuration, and the `automaticGainControl()` feature used normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
 
 It was also non-blocking, polling the `IRQ_STATUS` register or INT pin to determine when readings were ready, instead of waiting in a delay loop.
 
@@ -107,6 +108,8 @@ A separate GND measurement is needed to make the measurement meaningful.
 
 
 # Class Reference
+
+To find out what each method does, open the `src/Si114xSensor.h` file and read the comments for each method.  
 
 ```cpp
 class Si114xSensor
