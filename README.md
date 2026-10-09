@@ -31,7 +31,7 @@ It is also non-blocking, polling the `IRQ_STATUS` register or INT pin to determi
 
 The ADC is 17-bits, but the measurement registers only hold 16-bits. So it must be configured to copy either the MS or the LS 16 bits from the ADC into the measurement registers by using the `PS_ENCODING` and `AS_ENCODING` parameters. 
 
-The default is **MS 16 bits**. This means that the raw values should all be multiplied by 2 (shift left 1). This setting must be taken into account when using the raw measurements. This is why some users were complaining about the readings being too low.
+The default is **MS 16 bits**. This means that the raw values should all be multiplied by 2 (shift left 1). This setting must be taken into account when using the raw measurements. This could be why some users were complaining about the readings being too high.
 
 ## Postion Sensing
 
