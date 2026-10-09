@@ -44,9 +44,9 @@ For motion detection you'll need an Si1146 (with 2 x IR LEDs), and for gesture d
 
 ## Input Selection and Configuration
 
-<img src="assets/si1145-signal-path.png" alt="Si114x Signal Path Diagram" width="300">
+Here is the diagram from the data sheet. Each ADC conversion has a multiplexer (MX) to select the input, configurable ADC conversion, and finally a Sum operation wch adds an offset of 256 to the reading. The AUX_ADCMUX at he bootom has no configuration, and only the VDD and Temperature inputs can be selected - or the AUX data registers are used for the UV Index value (not shown on the diagram). 
 
-
+<img src="assets/si114x-signal-path.png" alt="Si114x Signal Path Diagram">
 
 
 ## AUX MUX
@@ -64,17 +64,15 @@ For example, with TEMPERATURE connected to PS1, PS2 or PS3 I got a reading of 0x
 
 ## Overflow Detection
 
-If a command is sent, the `RESPONSE` register can return an overflow status. (It's also used for command counting, which causes problems with the software because the command counter is not returned if an overflow occurs - so did the command work or not?)
+If a command is sent, the `RESPONSE` register can return an overflow status. This register is also used for command counting, which causes problems with the software because the command counter is not returned if an overflow occurs - so did the command work or not?
 
-The overflow error is latched into the 'overflowError' value which is read and cleared with getOverflowError(). However, this can miss overflows if commands are not being sent, so you should always check the returned values for 0xFFFF.
+The library latches the overflow error into the `overflowError` value which is read and cleared with `getOverflowError()`. However, this only detects overflow if commands are being sent, so you should always check the returned values for 0xFFFF to detect overflow.
 
-This is not clearly described in the data sheet, the max. value before overflow is returned is NOT 0xFFFE as you would imagine.
+The max. value before overflow is returned is NOT 0xFFFE as you would imagine. This is not clearly described in the data sheet, and several of the libraries get this wrong.
 
 The range is 0..0x3FFF for MS 16 bits or 0..0x7FFF for LS 16 bits, see the `PS_ENCODING` and `ALS_ENCODING` parameters.
 
-For MS 16 bits, the result is set to 0xFFFF if above **0x3FFF**.
-
-For LS 16 bits, the result is set to 0xFFFF if above **0x7FFF**.
+For MS 16 bits, the result is set to 0xFFFF if above **0x3FFF**. For LS 16 bits, the result is set to 0xFFFF if above **0x7FFF**.
 
 The 16/17 bit setting must be taking into accunt when doing automatic gain control.
 
@@ -146,6 +144,13 @@ public:
 	void getGain(byte* visGain, byte* irGain, bool* visHighRange, bool* irHighRange);
 };
 ```
+
+## Overriding `configureChip()` for Custom Configuration
+
+To avoid modifying the library file and provide a kind of configuration template, a class can be derived from Si114xSensor, and the `configureChip()` method can be overridden in the derived class. 
+
+This is shown in the example sketch.
+
 
 ## Data Sheets
 
