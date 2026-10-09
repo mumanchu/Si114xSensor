@@ -33,7 +33,7 @@ The ADC is 17-bits, but the measurement registers only hold 16-bits. So it must 
 
 The default is **MS 16 bits**. This means that the raw values should all be multiplied by 2 (shift left 1). This setting must be taken into account when using the raw measurements. This could be why some users were complaining about the readings being too high.
 
-## Postion Sensing
+## Position Sensing
 
 This library does not handle proximity, motion or gesture sensing. Only the ambient light, IR sensor and UV Index are enabled. If you want to add proximity sensing, Silicon Labs has example code for full gesture sensing in this file, \
 https://github.com/x893/SX1231/blob/master/SX12xxDrivers-2.0.0/src/platform/efm32libs/kits/common/drivers/si114x_algorithm.c
@@ -45,9 +45,9 @@ For motion detection you'll need an Si1146 (with 2 x IR LEDs), and for gesture d
 
 ## Input Selection and Configuration
 
-Here is the diagram from the data sheet. Each ADC conversion has a multiplexer (MUX) to select the input, configurable ADC conversion, and finally a 'Sum' operation which adds an offset of 256 to each reading. 
+Here is the diagram from the data sheet. Each ADC conversion has a multiplexer (MUX) to select the input, a configurable ADC conversion, and finally a 'Sum' operation which adds an offset of 256 to every reading. 
 
-The AUX_ADCMUX at the bottom has no configuration, and only the VDD and Temperature inputs can be selected, or the AUX data registers are used for the UV Index value (not shown on the diagram) if `EN_UV` is used instead of `EN_AUX` in `CHLIST`. 
+The `AUX_ADCMUX` at the bottom has no configuration, and only the VDD and Temperature inputs can be selected, or the AUX data registers are used for the UV Index value (not shown on the diagram) if `EN_UV` is used instead of `EN_AUX` in `CHLIST`. 
 
 The diagram makes it look as though there are 6 ADCs. In reality I think there is only one. Readings are not taken simultaneously, they are taken sequentially.
 
