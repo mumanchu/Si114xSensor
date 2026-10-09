@@ -41,7 +41,7 @@ bool MySi114x::configureChip()
 		CHLIST, EN_UV | EN_PS1 | EN_PS2 | EN_PS3 | EN_ALS_VIS | EN_ALS_IR,
 
 		// MUX selection, see diagram p28
-		// VDD_VOLTAGE does not work on PSx_ADCMUX
+		// VDD_VOLTAGE does not work on PSx_ADCMUX unless PS_RANGE=high
 		PS1_ADCMUX, NO_PHOTODIODE,			// NO_PHOTODIODE = REF, p28
 		PS2_ADCMUX, GND_VOLTAGE,			// how to "reference to GND"?
 		PS3_ADCMUX, TEMPERATURE,			// e.g. 0x429E
