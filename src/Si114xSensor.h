@@ -1076,7 +1076,7 @@ bool Si114xSensor::readReg(Si114x_REG reg, byte* data, uint length /*=1*/)
 		LOGERROR("endTransmission() failed");
 		return false;
 	}
-	wire->requestFrom(i2cAdds, length);
+	wire->requestFrom((int)i2cAdds, length);
 	if (wire->readBytes((byte*)data, length) != length) {
 		LOGERROR("readBytes() failed");
 		return false;
@@ -1100,7 +1100,7 @@ bool Si114xSensor::pollReg(Si114x_REG reg, byte* data, bool first)
 			return false;
 		}
 	}
-	wire->requestFrom(i2cAdds, 1);
+	wire->requestFrom((int)i2cAdds, 1);
 	int b = wire->read();
 	if (b < 0) {
 		LOGERROR("read() failed");
