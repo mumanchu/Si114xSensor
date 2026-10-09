@@ -2,28 +2,33 @@
 ALS, IR and Proximity Sensor, with UV Index
 
 > [!NOTE]
-> THE Si144x CHIPS ARE NOW DISCONTINUED (NOT MANUFACTURED), AND THEY DO NOT CONTAIN A UV SENSOR! (The UV Index is estimated.)
+> The Silicon Labs Si144x chips are now discontinued (not manufactured). They do not contain a UV Sensor, the UV Index is estimated.
 
-The data sheet says, "Integrated UV index sensor". That is not true. It estimates the UV Index from its ambient light and infrared sensors.
+But you still buy breakout boards like this one on AliExpress, like this one from Shenzhen Module Studio (CHF 14.-) \
+https://de.aliexpress.com/item/1005012309826317.html
+
+<img src="assets/si1145-breakout-board.jpg" alt="Picture of Si1145 breakout board" width="300">
+
+
+The Silicon Labs data sheet says, "Integrated UV index sensor". That is not quite true. It estimates the UV Index from its ambient light and infrared sensor readings.
 
 I updated this old code for the Arduino architecture while playing with UV Sensors. Maybe someone is interested. 
 
 Below are some technical details, so read the Data Sheet first to get an overview. Page numbers, e.g. p28, refer to this version 1.3 (12/14) of the data sheet. \
 https://www.waveshare.com/w/upload/9/99/Si1145-46-47.pdf
 
-ALS = Ambient Light Sensor : VIS = Visible Light, IR = Infrared
+ALS = Ambient Light Sensor : ALS_VIS = Visible Light, ALS_IR = Infrared
 PS = Position Sensor
 
 ## Advantages of this Antique Library
 
-Unlike most of the other old Si114x libraries, this code adjusted the raw measurements using the gain, range setting and 16/17 bit alignment, using `getNormalisedMeasurements()`. Thus the LUX and other calculations 
-were adapted according to the configuration, and the `automaticGainControl()` feature used normalized measurements. 
+Unlike most of the other antique Si114x libraries, this code adjusted the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapted according to the configuration, and the `automaticGainControl()` feature used normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
 
 It was also non-blocking, polling the `IRQ_STATUS` register or INT pin to determine when readings were ready, instead of waiting in a delay loop.
 
 ## 16 or 17-Bit Encoding
 
-The ADC is 17-bits, but the measurement registers only hold 16-bits. So it must be configured to load the MS or the LS 16 bits from the ADC into the measurement registers, using the `PS_ENCODING` and `AS_ENCODING` parameters. 
+The ADC is 17-bits, but the measurement registers only hold 16-bits. So it must be configured to copy either the MS or the LS 16 bits from the ADC into the measurement registers, using the `PS_ENCODING` and `AS_ENCODING` parameters. 
 
 The default is **MS 16 bits**. This means that the raw values should all be multiplied by 2 (shift left 1). This setting must be taken into account when using the raw measurements.
 
@@ -105,12 +110,41 @@ A separate GND measurement is needed to make the measurement meaningful.
 # Class Reference
 
 ```cpp
+class Si114xSensor
+{
+public:
+	// Override this is a derived class to code your own configuration
+	virtual bool configureChip();
 
+	bool begin(TwoWire* twoWire);
+	bool writeDefaultConfiguration();
+	bool softwareReset();
+	bool writeConfiguration(const Si114x_CONFIG* config, uint configLength);
 
+	bool forceMeasurement(bool als = true, bool ps = true);
+	bool pauseMeasurements(bool als = true, bool ps = true);
+	bool startMeasurements(bool als = true, bool ps = true);
 
+	bool readAllMeasurements(Si114x_MEASUREMENTS* measurements);
+	bool readAlsVis(uint* alsVis);
+	bool readAlsIr(uint* alsIr);
+	bool readPs1(uint* ps1);
+	bool readPs2(uint* ps2);
+	bool readPs3(uint* ps3);
+	bool readUvIndex(uint* uvIndex);
+	bool readTemperature(uint* temperature);
+
+	bool writeIRQEnable(byte irqEnable);
+	bool readIRQStatus(byte* irqStatus);
+	bool readChipStatus(bool* running, bool* sleeping, bool* suspended);
+
+	bool getNormalisedMeasurements(uint alsVis, uint alsIr,	ulong* normalisedVis,
+		ulong* normalisedIr, byte relativeGain = 0);
+	ulong calculateLux(uint alsVis, uint alsIr);
+	bool automaticGainControl(uint aslVis, uint alsIr);
+	void getGain(byte* visGain, byte* irGain, bool* visHighRange, bool* irHighRange);
+};
 ```
-
-
 
 ## Data Sheets
 
