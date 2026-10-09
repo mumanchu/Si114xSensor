@@ -15,37 +15,37 @@ The Silicon Labs data sheet says, "Integrated UV index sensor". That is not quit
 
 I updated this old code for the Arduino architecture while playing with UV Sensors. Maybe someone is interested (but probably not). 
 
-Below are some technical details, so read the Data Sheet first to get an overview. Page numbers, e.g. p28, refer to this version fo the data sheet, 1.3 (12/14). \
+Below are some technical details, so read the Data Sheet first to get an overview. Page numbers, e.g. p28, refer to this version of the data sheet, Rev. 1.3 (12/14). \
 https://www.waveshare.com/w/upload/9/99/Si1145-46-47.pdf
 
-ALS = Ambient Light Sensor : ALS_VIS = Visible Light, ALS_IR = Infrared
+ALS = Ambient Light Sensor : ALS_VIS = Visible Light, ALS_IR = Infrared \
 PS = Position Sensor
 
 ## Advantages of this Antique Library
 
-Unlike most of the other old Si114x libraries, this code adjusted the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapted themselves according to the configuration, and the `automaticGainControl()` feature used normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
+Unlike most of the other old Si114x libraries, this code adjusts the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapt themselves according to the configuration, and the `automaticGainControl()` feature uses normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
 
-It was also non-blocking, polling the `IRQ_STATUS` register or INT pin to determine when readings were ready, instead of waiting in a delay loop.
+It is also non-blocking, polling the `IRQ_STATUS` register or INT pin to determine when readings were ready.
 
 ## 16 or 17-Bit Encoding
 
-The ADC is 17-bits, but the measurement registers only hold 16-bits. So it must be configured to copy either the MS or the LS 16 bits from the ADC into the measurement registers, using the `PS_ENCODING` and `AS_ENCODING` parameters. 
+The ADC is 17-bits, but the measurement registers only hold 16-bits. So it must be configured to copy either the MS or the LS 16 bits from the ADC into the measurement registers by using the `PS_ENCODING` and `AS_ENCODING` parameters. 
 
-The default is **MS 16 bits**. This means that the raw values should all be multiplied by 2 (shift left 1). This setting must be taken into account when using the raw measurements.
+The default is **MS 16 bits**. This means that the raw values should all be multiplied by 2 (shift left 1). This setting must be taken into account when using the raw measurements. This is why some users were complaining about the readings being too low.
 
 ## Postion Sensing
 
 This library does not handle proximity, motion or gesture sensing. Only the ambient light, IR sensor and UV Index are enabled. If you want to add proximity sensing, Silicon Labs has example code for full gesture sensing in this file, \
 https://github.com/x893/SX1231/blob/master/SX12xxDrivers-2.0.0/src/platform/efm32libs/kits/common/drivers/si114x_algorithm.c
 
-The Si1145 supports one IR LED for proximity only. If it's only proximity sensing that you need, use a cheap IR reflective sensor like the TCRT5000, \
+The Si1145 supports one IR LED for proximity only. If it's only proximity sensing that you need, use a cheap IR reflective sensor like the TCRT5000 instead. \
 https://muman.ch/muman/index.htm?muman-infrared-reflective-sensor.htm
 
 For motion detection you'll need an Si1146 (with 2 x IR LEDs), and for gesture detection you'll need an Si1147 (with 3 x IR LEDS). But there are more recent and better chips out there for this, even using radar signals (mmWave radar sensors). There will be a muman.ch blog post about these soon.
 
 ## Input Selection and Configuration
 
-Here is the diagram from the data sheet. Each ADC conversion has a multiplexer (MX) to select the input, configurable ADC conversion, and finally a Sum operation wch adds an offset of 256 to the reading. The AUX_ADCMUX at he bootom has no configuration, and only the VDD and Temperature inputs can be selected - or the AUX data registers are used for the UV Index value (not shown on the diagram). 
+Here is the diagram from the data sheet. Each ADC conversion has a multiplexer (MUX) to select the input, configurable ADC conversion, and finally a 'Sum' operation which adds an offset of 256 to each reading. The AUX_ADCMUX at the bottom has no configuration, and only the VDD and Temperature inputs can be selected, or the AUX data registers are used for the UV Index value (not shown on the diagram) if `EN_UV` is used instead of `EN_AUX` in `CHLIST`. 
 
 The diagram makes it look as though there are 6 ADCs. In reality I think there is only one. Readings are not taken simultaneously, they are taken sequentially.
 
@@ -54,36 +54,35 @@ The diagram makes it look as though there are 6 ADCs. In reality I think there i
 
 ## AUX MUX
 
-As seen above, the chip contains 5 multiplexers (MUX) which define the ADC inputs for each reading. The input for each MUX is selected with the `xxx_ADCMUX` parameters. Each has parameters for defining 16/17 bit alignment, rate, gain and range. But the AUX input does not have these.
+As seen above, the chip contains 5 multiplexers (MUX) which define the ADC inputs for each reading. The input for each MUX is selected with the `xxx_ADCMUX` parameters, except `ALS_VIS_DATA` which is hard-wired to the visible light sensor. Each has parameters for defining 16/17 bit alignment, rate, gain and range. But the AUX input does not have any configuration.
 
-The AUX input does not have an `xxx_ENCODING` setting, so it's not clear if it's the MS 16 bits or the LS 16 bits. I assume it is a full 16 bit reading.
+The AUX MUX reading is normally used for the UV Index calculation, with readings returned in the `AUX_DATAx_UVINDEXx` registers. Select this with `EN_UV` in `CHLIST`. Alternatively, AUX can be used for TEMPERATURE or VDD_VOLTAGE measurement. 
 
-The AUX MUX reading is normally used for the UV Index calculation, with readings in the the `AUX_DATAx_UVINDEXx` registers. Select this with `EN_UV` in `CHLIST`. Alternatively, AUX can be used for TEMPERATURE or VDD_VOLTAGE measuerment, p28. But the AUX reading seems to be scaled differently to 
-the others. 
+The AUX input does not have an `xxx_ENCODING` setting, so it's not clear if it's the MS 16 bits or the LS 16 bits when the Temperature or VDD inputs are selected.
 
-For example, with TEMPERATURE connected to PS1, PS2 or PS3 I got a reading of 0x429E (for example). When TEMPERATURE is connected to AUX then I got a reading of 0x2C3C. I was not able to find a relationship between these values.
+The AUX reading seems to be scaled differently to the others. For example, with TEMPERATURE connected to PS1, PS2 or PS3 I got a reading of 0x429E (for example). When TEMPERATURE is connected to AUX then I got a reading of 0x2C3C. I was not able to find a relationship between these values.
 
 `VDD_VOLTAGE` did not seem to work on the `PSx_ADCMUXs`, it always returns 0xFFFF, so I was not able to compare the VDD readings via the PSx and AUX ADCs.
 
 ## Overflow Detection
 
-If a command is sent, the `RESPONSE` register can return an overflow status. This register is also used for command counting, which causes problems with the software because the command counter is not returned if an overflow occurs - so did the command work or not?
+If a command is sent, the `RESPONSE` register can return an overflow status. This register is also used for command counting, which causes problems with the software because the command counter value is not returned if an overflow occurs - so did the command work or not?
 
-The library latches the overflow error into the `overflowError` value which is read and cleared with `getOverflowError()`. However, this only detects overflow if commands are being sent, so you should always check the returned values for 0xFFFF to detect overflow.
+The library latches the overflow error into the `overflowError` value which is read and cleared with `getOverflowError()`. However, this only detects overflow if commands are being sent, so you should always check the returned measurements for 0xFFFF to detect overflow.
 
-The max. value before overflow is returned is NOT 0xFFFE as you would imagine. This is not clearly described in the data sheet, and several of the libraries get this wrong.
+The max. value before overflow is returned is NOT 0xFFFE as you would imagine. This is not clearly described in the data sheet, and other libraries get this wrong.
 
 The range is 0..0x3FFF for MS 16 bits or 0..0x7FFF for LS 16 bits, see the `PS_ENCODING` and `ALS_ENCODING` parameters.
 
 For MS 16 bits, the result is set to 0xFFFF if above **0x3FFF**. For LS 16 bits, the result is set to 0xFFFF if above **0x7FFF**.
 
-The 16/17 bit setting must be taking into accunt when doing automatic gain control.
+The 16/17 bit setting must be taken into account when doing automatic gain control.
 
 ## Grey Areas
 
 There were a lot of unanswered questions with this chip. For example, go to p51 (AREA51). Nothing to do with "The Grays".
 
-I never figured out what to do with the offset measurements (No Photodiode, GND measurement, VDD voltage, etc), despite playing around for a while. So I just ignored them, as did everyone else, including SiliconLabs. If anyone knows how to use these offset measurements, or how to use the Temperature sensor, please let me know.
+I never figured out what to do with the offset measurements (No Photodiode, GND measurement, VDD voltage, etc), despite playing around for a while. So I just ignored them, as did everyone else, including SiliconLabs. If anyone knows how to use these offset measurements, or how to use the Temperature sensor, please let me know! (info@muman.ch)
 
 From the data sheet, p51...
 
@@ -111,7 +110,7 @@ A separate GND measurement is needed to make the measurement meaningful.
 
 # Class Reference
 
-To find out what each method does, open the `src/Si114xSensor.h` file and read the comments for each method.  
+To find out what each method does, open the `src/Si114xSensor.h` file and read the voluminous comments for each method.  
 
 ```cpp
 class Si114xSensor
@@ -154,7 +153,7 @@ public:
 
 To avoid modifying the library file, and to provide a kind of configuration template, a class can be derived from Si114xSensor and the `configureChip()` method is overridden in the derived class. The derived class also adds calculation of the `pollTime` value so it does not poll the chip faster than is necessary when waiting for new readings.
 
-This is shown in the example sketch. 
+These are illustarted in the example sketch. 
 
 
 ## References
@@ -169,7 +168,7 @@ https://www.mouser.com/datasheet/2/737/Si1145-46-47-932790.pdf
 for proximity and gesture detection \
 https://www.silabs.com/documents/public/application-notes/AN498.pdf
 
-**AN523: Overlay Considerations for theE Si114x Sensor** \
+**AN523: Overlay Considerations for the Si114x Sensor** \
 https://www.silabs.com/documents/public/application-notes/AN523.pdf
 
 **AN580: Infrared Gesture Sensing** \
@@ -179,19 +178,20 @@ https://www.edn.com/eeweb-content/wp-content/uploads/articles-app-notes-files-in
 Thankfully, I couldn't find this one.
 
 **Silicon Labs Code from 2014** \
-Look for Si114x \
+Look for 'Si114x' \
 https://github.com/x893/SX1231/tree/master/SX12xxDrivers-2.0.0/src/platform/efm32libs/kits/common/drivers
 
 **Breakout Boards** \
 These are probably no longer available \
 https://github.com/Seeed-Studio/Grove_Sunlight_Sensor \
-https://learn.adafruit.com/assets/15517
+https://learn.adafruit.com/adafruit-si1145-breakout-board-uv-ir-visible-sensor
 
 **Other Libraries** \
-For reference. These often do not handle configuration changes, like 16/17 bit alignment, etc. \
+For reference. These may not handle certain configuration changes, like 16/17 bit alignment, etc. \
 https://github.com/adafruit/Adafruit_SI1145_Library \
 https://github.com/wollewald/SI1145_WE/tree/master \
 https://github.com/HGrabas/SI1145/tree/master \
+https://github.com/Seeed-Studio/Grove_Sunlight_Sensor
 
 
 ## Revision History
