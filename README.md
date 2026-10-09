@@ -23,7 +23,7 @@ PS = Position Sensor
 
 ## Advantages of this Antique Library
 
-Unlike most of the other old Si114x libraries, this code adjusts the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapt themselves according to the configuration, and the `automaticGainControl()` feature uses normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
+_Unlike_ most of the other old Si114x libraries, this code adjusts the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapt themselves according to the configuration, and the `automaticGainControl()` feature uses normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
 
 It is also non-blocking, polling the `IRQ_STATUS` register or INT pin to determine when readings were ready.
 
@@ -45,7 +45,9 @@ For motion detection you'll need an Si1146 (with 2 x IR LEDs), and for gesture d
 
 ## Input Selection and Configuration
 
-Here is the diagram from the data sheet. Each ADC conversion has a multiplexer (MUX) to select the input, configurable ADC conversion, and finally a 'Sum' operation which adds an offset of 256 to each reading. The AUX_ADCMUX at the bottom has no configuration, and only the VDD and Temperature inputs can be selected, or the AUX data registers are used for the UV Index value (not shown on the diagram) if `EN_UV` is used instead of `EN_AUX` in `CHLIST`. 
+Here is the diagram from the data sheet. Each ADC conversion has a multiplexer (MUX) to select the input, configurable ADC conversion, and finally a 'Sum' operation which adds an offset of 256 to each reading. 
+
+The AUX_ADCMUX at the bottom has no configuration, and only the VDD and Temperature inputs can be selected, or the AUX data registers are used for the UV Index value (not shown on the diagram) if `EN_UV` is used instead of `EN_AUX` in `CHLIST`. 
 
 The diagram makes it look as though there are 6 ADCs. In reality I think there is only one. Readings are not taken simultaneously, they are taken sequentially.
 
@@ -60,15 +62,15 @@ The AUX MUX reading is normally used for the UV Index calculation, with readings
 
 The AUX input does not have an `xxx_ENCODING` setting, so it's not clear if it's the MS 16 bits or the LS 16 bits when the Temperature or VDD inputs are selected.
 
-The AUX reading seems to be scaled differently to the others. For example, with TEMPERATURE connected to PS1, PS2 or PS3 I got a reading of 0x429E (for example). When TEMPERATURE is connected to AUX then I got a reading of 0x2C3C. I was not able to find a relationship between these values.
+The AUX reading also seems to be scaled differently to the others. For example, with TEMPERATURE connected to PS1, PS2 or PS3 I got a reading of 0x429E (for example). When TEMPERATURE is connected to AUX then I got a reading of 0x2C3C. I was not able to find a relationship between these two readings.
 
-`VDD_VOLTAGE` did not seem to work on the `PSx_ADCMUXs`, it always returns 0xFFFF, so I was not able to compare the VDD readings via the PSx and AUX ADCs.
+Note: `VDD_VOLTAGE` does not work on the `PSx_ADCMUXs` unless PS_RANGE = high, it always returns 0xFFFF.
 
 ## Overflow Detection
 
-If a command is sent, the `RESPONSE` register can return an overflow status. This register is also used for command counting, which causes problems with the software because the command counter value is not returned if an overflow occurs - so did the command work or not?
+When a command is sent, the `RESPONSE` register can return an overflow status, but it's normally used for command counting. This causes problems with the software because the command counter value is not returned if an overflow occurs - so did the command work or not?
 
-The library latches the overflow error into the `overflowError` value which is read and cleared with `getOverflowError()`. However, this only detects overflow if commands are being sent, so you should always check the returned measurements for 0xFFFF to detect overflow.
+This library latches the overflow error into the `overflowError` value which is read and cleared with `getOverflowError()`. However, this only detects overflow if commands are being sent, so you should always check the returned measurements for 0xFFFF to detect overflow.
 
 The max. value before overflow is returned is NOT 0xFFFE as you would imagine. This is not clearly described in the data sheet, and other libraries get this wrong.
 
@@ -80,7 +82,7 @@ The 16/17 bit setting must be taken into account when doing automatic gain contr
 
 ## Grey Areas
 
-There were a lot of unanswered questions with this chip. For example, go to p51 (AREA51). Nothing to do with "The Grays".
+There were a lot of unanswered questions with this chip. For example, go to p51 (AREA51). I'm sure it has nothing to do with The Grays.
 
 I never figured out what to do with the offset measurements (No Photodiode, GND measurement, VDD voltage, etc), despite playing around for a while. So I just ignored them, as did everyone else, including SiliconLabs. If anyone knows how to use these offset measurements, or how to use the Temperature sensor, please let me know! (info@muman.ch)
 
