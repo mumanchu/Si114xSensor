@@ -1,16 +1,16 @@
 # Si114xSensor : Arduino Library for Si1145/6/7 
-ALS, IR and Proximity Sensor, with UV Index
+ALS, IR and Proximity/Motion/Gesture Sensor, with on-chip UV Index calculation.
 
 > [!NOTE]
 > The Silicon Labs Si144x chips are now discontinued (not manufactured). They do not contain a UV Sensor, the UV Index is estimated.
 
-But you still buy breakout boards like this one on AliExpress, like this one from Shenzhen Module Studio (CHF 14.-) \
+But you can still buy breakout boards like this one on AliExpress, from Shenzhen Module Studio Ltd (CHF 14.-) \
 https://de.aliexpress.com/item/1005012309826317.html
 
 <img src="assets/si1145-breakout-board.jpg" alt="Picture of Si1145 breakout board" width="300">
 
 
-The Silicon Labs data sheet says, "Integrated UV index sensor". That is not quite true. It estimates the UV Index from its ambient light and infrared sensor readings.
+The Silicon Labs data sheet says, "Integrated UV index sensor". That is not quite true. It estimates the UV Index from the ambient light and infrared sensor readings.
 
 I updated this old code for the Arduino architecture while playing with UV Sensors. Maybe someone is interested. 
 
@@ -22,7 +22,7 @@ PS = Position Sensor
 
 ## Advantages of this Antique Library
 
-Unlike most of the other antique Si114x libraries, this code adjusted the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapted according to the configuration, and the `automaticGainControl()` feature used normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
+Unlike most of the other old Si114x libraries, this code adjusted the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapted according to the configuration, and the `automaticGainControl()` feature used normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
 
 It was also non-blocking, polling the `IRQ_STATUS` register or INT pin to determine when readings were ready, instead of waiting in a delay loop.
 
@@ -34,17 +34,18 @@ The default is **MS 16 bits**. This means that the raw values should all be mult
 
 ## Postion Sensing
 
-This library does not handle position sensing. Only the ambient light, IR sensor and UV Index are enabled. If you want to add proximity sensing, Silicon Labs has example code for gesture sensing in this file, \
+This library does not handle proximity, motion or gesture sensing. Only the ambient light, IR sensor and UV Index are enabled. If you want to add proximity sensing, Silicon Labs has example code for full gesture sensing in this file, \
 https://github.com/x893/SX1231/blob/master/SX12xxDrivers-2.0.0/src/platform/efm32libs/kits/common/drivers/si114x_algorithm.c
 
 The Si1145 supports one IR LED for proximity only. If it's only proximity sensing that you need, use a cheap IR reflective sensor like the TCRT5000, \
 https://muman.ch/muman/index.htm?muman-infrared-reflective-sensor.htm
 
-For motion detection you'll need an Si1146 (with 2 x IR LEDs), and for gesture detection you'll need an Si1147 (with 3 x IR LEDS). But there are more recent and better chips out there for this, even using radar signals. There will be a muman.ch blog post about these soon.
+For motion detection you'll need an Si1146 (with 2 x IR LEDs), and for gesture detection you'll need an Si1147 (with 3 x IR LEDS). But there are more recent and better chips out there for this, even using radar signals (mmWave radar sensors). There will be a muman.ch blog post about these soon.
 
 ## Input Selection and Configuration
 
-TODO p28 signal path diagram
+<img src="assets/si1145-signal-path.png" alt="Si114x Signal Path Diagram" width="300">
+
 
 
 
