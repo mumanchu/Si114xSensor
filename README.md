@@ -157,7 +157,7 @@ To avoid modifying the library file, and to provide a kind of configuration temp
 This is shown in the example sketch. 
 
 
-## Data Sheets
+## References
 
 All page numbers refer to this version of the data sheet (Rev. 1.3 12/14) \
 https://www.waveshare.com/w/upload/9/99/Si1145-46-47.pdf
@@ -178,26 +178,20 @@ https://www.edn.com/eeweb-content/wp-content/uploads/articles-app-notes-files-in
 **AN522: Using the Si1141 for Touchless Lavatory Appliances** \
 Thankfully, I couldn't find this one.
 
-
-## Useful Code
-
-SILICON LABS CODE (2014)
-Look for Si114x
+**Silicon Labs Code from 2014** \
+Look for Si114x \
 https://github.com/x893/SX1231/tree/master/SX12xxDrivers-2.0.0/src/platform/efm32libs/kits/common/drivers
 
-
-BREAKOUT BOARDS
-
-probably no longer available
-https://github.com/Seeed-Studio/Grove_Sunlight_Sensor
+**Breakout Boards** \
+These are probably no longer available \
+https://github.com/Seeed-Studio/Grove_Sunlight_Sensor \
 https://learn.adafruit.com/assets/15517
 
-OLD LIBRARIES
-These don't handle changes in the configuration very well, and the don't 
-seem to handle the 16/17 bit alignment.
-https://github.com/adafruit/Adafruit_SI1145_Library
-https://github.com/wollewald/SI1145_WE/tree/master
-https://github.com/HGrabas/SI1145/tree/master
+**Other Libraries** \
+For reference. These often do not handle configuration changes, like 16/17 bit alignment, etc. \
+https://github.com/adafruit/Adafruit_SI1145_Library \
+https://github.com/wollewald/SI1145_WE/tree/master \
+https://github.com/HGrabas/SI1145/tree/master \
 
 
 ## Revision History
@@ -210,4 +204,8 @@ https://github.com/HGrabas/SI1145/tree/master
 
 ## Joke of the Week
 
+Pi = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679... \
+Shepherd's Pi = 3
+
+Homework: Define the physical characteristics of a universe in which Pi is an integer.
 
