@@ -35,12 +35,6 @@ Now open the Arduino IDE. Select menu item "Sketch / Include Library > Add ZIP L
 
 To open the example sketch, select menu item "File > Examples" and scroll down beyond "Examples from Custom Libraries" and choose the "Si114xSensor > Si114xSensor" entry. This opens the "Si114XSensor.ino" example sketch in a new Arduino IDE window.
 
-## 16 or 17-Bit Encoding
-
-The ADC is 17-bits, but the measurement registers only hold 16-bits. So it must be configured to copy either the MS or the LS 16 bits from the ADC into the measurement registers by using the `PS_ENCODING` and `AS_ENCODING` parameters. 
-
-The default is **MS 16 bits**. This means that the raw values should all be multiplied by 2 (shift left 1). This setting must be taken into account when using the raw measurements. This could be why some users were complaining about the readings being too high.
-
 ## Proximity Sensing
 
 This library does not handle proximity, motion or gesture sensing. Only the ambient light, IR sensor and UV Index are enabled. If you want to add proximity sensing, Silicon Labs has example code for full gesture sensing in this file, \
@@ -60,7 +54,6 @@ The `AUX_ADCMUX` at the bottom has no configuration, and only the VDD and Temper
 The diagram makes it look as though there are 6 ADCs. In reality I think there is only one. Readings are not taken simultaneously, they are taken sequentially.
 
 <img src="assets/si114x-signal-path.png" alt="Si114x Signal Path Diagram">
-
 
 ## AUX MUX
 
@@ -87,6 +80,12 @@ The range is 0..0x3FFF for MS 16 bits or 0..0x7FFF for LS 16 bits, see the `PS_E
 For MS 16 bits, the result is set to 0xFFFF if above **0x3FFF**. For LS 16 bits, the result is set to 0xFFFF if above **0x7FFF**.
 
 The 16/17 bit setting must be taken into account when doing automatic gain control.
+
+## 16 or 17-Bit Encoding
+
+The ADC is 17-bits, but the measurement registers only hold 16-bits. So it must be configured to copy either the MS or the LS 16 bits from the ADC into the measurement registers by using the `PS_ENCODING` and `AS_ENCODING` parameters. 
+
+The default is **MS 16 bits**. This means that the raw values should all be multiplied by 2 (shift left 1). This setting must be taken into account when using the raw measurements. This could be why some users were complaining about the readings being too high.
 
 ## Gray Areas
 
