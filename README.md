@@ -47,6 +47,8 @@ For motion detection you'll need an Si1146 (with 2 x IR LEDs), and for gesture d
 
 Here is the diagram from the data sheet. Each ADC conversion has a multiplexer (MX) to select the input, configurable ADC conversion, and finally a Sum operation wch adds an offset of 256 to the reading. The AUX_ADCMUX at he bootom has no configuration, and only the VDD and Temperature inputs can be selected - or the AUX data registers are used for the UV Index value (not shown on the diagram). 
 
+The diagram makes it look as though there are 6 ADCs. In reality I think there is only one.
+
 <img src="assets/si114x-signal-path.png" alt="Si114x Signal Path Diagram">
 
 
@@ -81,7 +83,7 @@ The 16/17 bit setting must be taking into accunt when doing automatic gain contr
 
 There were a lot of unanswered questions with this chip. For example, go to p51 (AREA51). Nothing to do with "The Grays".
 
-I never figured out what to do with the offset measurements (No Photodiode, GND measurement, VDD voltage, etc), despite playing around for a while. So I just ignored them, as did everyone else, including SiliconLabs. If anyone knows how to use these offset measurements, please let me know.
+I never figured out what to do with the offset measurements (No Photodiode, GND measurement, VDD voltage, etc), despite playing around for a while. So I just ignored them, as did everyone else, including SiliconLabs. If anyone knows how to use these offset measurements, or how to use the Temperature sensor, please let me know.
 
 From the data sheet, p51...
 
@@ -150,9 +152,9 @@ public:
 
 ## Overriding `configureChip()` for Custom Configuration
 
-To avoid modifying the library file and provide a kind of configuration template, a class can be derived from Si114xSensor, and the `configureChip()` method can be overridden in the derived class. 
+To avoid modifying the library file, and to provide a kind of configuration template, a class can be derived from Si114xSensor and the `configureChip()` method is overridden in the derived class. The derived class also adds calculation of the `pollTime` value so it does not poll the chip faster than is necessary when waiting for new readings.
 
-This is shown in the example sketch.
+This is shown in the example sketch. 
 
 
 ## Data Sheets
