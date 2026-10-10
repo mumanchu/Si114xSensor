@@ -21,7 +21,7 @@ https://muman.ch/pub/Si1145-46-47.pdf
 ALS = Ambient Light Sensor : ALS_VIS = Visible Light, ALS_IR = Infrared \
 PS = Position Sensor
 
-## Advantages of this Antique Library
+## Advantages of this Old Library
 
 Unlike most of the other old Si114x libraries, this code adjusts the raw measurements using the gain, range setting and 16/17 bit alignment, see `getNormalisedMeasurements()`. Thus the LUX and other calculations automatically adapt themselves according to the configuration, and the `automaticGainControl()` feature uses normalized measurements and the correct max levels (0x3FFF or 0x7FFF depending on the 16/17 bit encoding, see below). 
 
