@@ -4,8 +4,7 @@
 // Si1145/6/7 ALS, IR and Proximity Sensor with and UV Index calculator
 // Copyright (C) https://muman.ch and https://github.com/mumanchu, 2015, 2026
 // If you re-use any of this code, please include the above copyright notice
-// 
-// See https://github.com/mumanchu/Si114xSensor
+// See https://github.com/mumanchu/Si114xSensor 
 
 #include <Wire.h>
 
@@ -42,7 +41,7 @@ public:
 		PARAM_WR = 0x17,
 		COMMAND = 0x18,
 		RESPONSE = 0x20,
-		CHIP_STAT = 0x30,		// running, suspended, sleeping, wandering about in a daze
+		CHIP_STAT = 0x30,
 		// Measurement registers
 		IRQ_STATUS = 0x21,
 		ALS_VIS_DATA0 = 0x22,
@@ -196,8 +195,8 @@ public:
 	bool softwareReset();
 	bool writeConfiguration(const Si114x_CONFIG* config, uint configLength);
 	bool forceMeasurement(bool als = true, bool ps = true);
-	bool pauseMeasurements(bool als = true, bool ps = true);
-	bool startMeasurements(bool als = true, bool ps = true);
+	bool startAutonomousMeasurements(bool als = true, bool ps = true);
+	bool pauseAutonomousMeasurements(bool als = true, bool ps = true);
 	bool readAllMeasurements(Si114x_MEASUREMENTS* measurements);
 	bool readAlsVis(uint* alsVis);
 	bool readAlsIr(uint* alsIr);
@@ -301,23 +300,10 @@ bool MySi114x::configureChip()
 		// VDD_VOLTAGE does not work on PSx_ADCMUX unless PS_RANGE=high
 		PS1_ADCMUX, NO_PHOTODIODE,			// NO_PHOTODIODE = REF, p28
 		PS2_ADCMUX, GND_VOLTAGE,			// how to "reference to GND"?
-		PS3_ADCMUX, TEMPERATURE,			// e.g. 0x429E
+		PS3_ADCMUX, TEMPERATURE,			// how to use temperature?
 		//ALS_VIS_ADCMUX is hard-wired to SMALL_VISIBLE
 		ALS_IR_ADCMUX, SMALL_IR,
 		//AUX_ADCMUX, TEMPERATURE,			// AUX is used for UV Index, EN_UV
-
-		/* To test TEMPERATURE
-		// Enable channels
-		CHLIST, EN_PS1 | EN_PS2 | EN_PS3 | EN_ALS_VIS | EN_ALS_IR | EN_AUX,
-
-		// MUX selection, see diagram p28
-		PS1_ADCMUX, TEMPERATURE,
-		PS2_ADCMUX, TEMPERATURE,
-		PS3_ADCMUX, TEMPERATURE,
-		//ALS_VIS_ADCMUX is hard-wired to SMALL_VISIBLE
-		ALS_IR_ADCMUX, SMALL_IR,
-		AUX_ADCMUX, TEMPERATURE,
-		*/
 
 		// no PS LEDs
 		PSLED12_SELECT, 0,
@@ -329,7 +315,7 @@ bool MySi114x::configureChip()
 		//PS_ADC_GAIN, 0b00000000,			// xxxxxggg, IR LED pulse width and ADC integration time, p54
 
 		// Alignment: 1=LS 16 bits, 0=MS 16 bits (default)
-		//PS_ENCODING, 0b01110000,			// x321xxxx, 3=PS3, 2=PS2, 1=PS1
+		//PS_ENCODING, 0b00000000,			// x321xxxx, 3=PS3, 2=PS2, 1=PS1
 		//ALS_ENCODING, 0b00000000,			// xxivxxxx, i=IR alignment, v=VIS alignment
 		//there is no AUX_ENCODING
 
@@ -367,7 +353,7 @@ bool MySi114x::configureChip()
 
 	// start autonomous conversion mode at MEAS_RATE
 	// poll with readIRQStatus()
-	if (!startMeasurements())
+	if (!startAutonomousMeasurements())
 		return false;
 
 	return true;
@@ -505,7 +491,7 @@ bool Si114xSensor::forceMeasurement(bool als/*=true*/, bool ps/*=true*/)
 
 // Autonomous Mode, start or resume continuous measurement
 // als = ambient light sensor, ps = position sensor
-bool Si114xSensor::startMeasurements(bool als/*=true*/, bool ps/*=true*/)
+bool Si114xSensor::startAutonomousMeasurements(bool als/*=true*/, bool ps/*=true*/)
 {
 	if (!als && !ps)
 		return false;
@@ -515,7 +501,7 @@ bool Si114xSensor::startMeasurements(bool als/*=true*/, bool ps/*=true*/)
 
 // Autonomous Mode, pause continuous measurements
 // als = ambient light sensor, ps = position sensor
-bool Si114xSensor::pauseMeasurements(bool als/*=true*/, bool ps/*=true*/)
+bool Si114xSensor::pauseAutonomousMeasurements(bool als/*=true*/, bool ps/*=true*/)
 {
 	if (!als && !ps)
 		return false;
@@ -576,7 +562,7 @@ Si114xSensor::Si114x_ERRORCODE Si114xSensor::getOverflowError()
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // IMPORTANT!
-// The chip should be in SLEEP mode (in between redings) when readings are read, 
+// The chip should be in SLEEP mode (in between readings) when readings are read, 
 // so they are not read when they are changing. This is NOT checked for in the code
 // below.
 
@@ -729,7 +715,7 @@ bool Si114xSensor::getNormalisedMeasurements(uint alsVis, uint alsIr,
 // to prevent 16-bit overflow/underflow.
 // Returns true if the gain was changed
 // IF IT RETURNS TRUE you must start the next reading immediately,
-// - if in autonomous mode, call startMeasurements()
+// - if in autonomous mode, call startAutonomousMeasurements()
 // - if in forced mode, call forceMeasurement()
 // YOU MUST USE getNormalisedMeasurements() for the VIS and IR values to
 // account for the gain and other factors.
@@ -834,7 +820,7 @@ bool Si114xSensor::automaticGainControl(uint alsVis, uint alsIr)
 
 	//TODO 
 	// if in autonomous mode, on return take a new set of readings by 
-	// calling startMeasurments()
+	// calling startAutonomousMeasurements()
 	// if in forced mode, on return call forceMeasurement()
 
 	return true;			// gain was changed
@@ -1109,4 +1095,3 @@ bool Si114xSensor::pollReg(Si114x_REG reg, byte* data, bool first)
 	*data = (byte)b;
 	return true;
 }
-
