@@ -187,7 +187,7 @@ public:
 	} Si114x_MEASUREMENTS;
 	#pragma pack(pop)
 
-	// Override this is a derived class to code your own configuration
+	// Override this in a derived class to code your own configuration
 	virtual bool configureChip();
 
 	bool begin(TwoWire* twoWire);
