@@ -129,7 +129,6 @@ public:
 	virtual bool configureChip();
 
 	bool begin(TwoWire* twoWire);
-	bool writeDefaultConfiguration();
 	bool softwareReset();
 	bool writeConfiguration(const Si114x_CONFIG* config, uint configLength);
 
