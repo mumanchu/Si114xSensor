@@ -85,7 +85,7 @@ The 16/17 bit setting must be taken into account when doing automatic gain contr
 
 The ADC is 17-bits, but the measurement registers only hold 16-bits. So it must be configured to copy either the MS or the LS 16 bits from the ADC into the measurement registers by using the `PS_ENCODING` and `AS_ENCODING` parameters. 
 
-The default is **MS 16 bits**. This means that the raw values should all be multiplied by 2 (shift left 1). This setting must be taken into account when using the raw measurements. This could be why some users were complaining about the readings being too high.
+The default is **MS 16 bits**. This means that the raw values should all be multiplied by 2 (shift left 1). This setting must be taken into account when using the raw measurements. This could be why some users were complaining about the readings being too low.
 
 ## Gray Areas
 
