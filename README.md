@@ -16,7 +16,7 @@ The Silicon Labs data sheet says, "Integrated UV index sensor". That is not quit
 I updated my old code for the Arduino architecture while playing with UV Sensors. Maybe someone is interested (but probably not). 
 
 Below are some technical details, so read the Data Sheet first to get an overview. Page numbers, e.g. p28, refer to this version of the data sheet, Rev. 1.3 (12/14). \
-https://www.waveshare.com/w/upload/9/99/Si1145-46-47.pdf
+https://muman.ch/pub/Si1145-46-47.pdf
 
 ALS = Ambient Light Sensor : ALS_VIS = Visible Light, ALS_IR = Infrared \
 PS = Position Sensor
@@ -168,7 +168,7 @@ These features are illustrated in the example sketch.
 ## References
 
 All page numbers refer to this version of the data sheet (Rev. 1.3 12/14) \
-https://www.waveshare.com/w/upload/9/99/Si1145-46-47.pdf
+https://muman.ch/pub/Si1145-46-47.pdf
 
 An older version (Rev. 1.1 12/13) \
 https://www.mouser.com/datasheet/2/737/Si1145-46-47-932790.pdf
