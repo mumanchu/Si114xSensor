@@ -2,8 +2,8 @@
 Silicon Labs ALS, IR and Proximity/Motion/Gesture Sensor, with on-chip UV Index calculation.
 
 > [!NOTE]
-> The Silicon Labs Si144x chips are now discontinued and are no longer manufactured. (So it's not recommended for new designs :-)
-> They also do not contain a UV Sensor, the UV Index is an estimation calculated by the on-chip DSP.
+> The Silicon Labs Si144x chips are now discontinued and are no longer manufactured. (They are not recommended for new designs :-)
+> They do not contain a UV Sensor, the UV Index is an estimation calculated by the on-chip DSP.
 
 But you can still buy breakout boards like this one on AliExpress, from Shenzhen Module Studio Co Ltd (CHF 14.-) \
 https://de.aliexpress.com/item/1005012309826317.html
