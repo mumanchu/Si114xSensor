@@ -134,8 +134,8 @@ public:
 	bool writeConfiguration(const Si114x_CONFIG* config, uint configLength);
 
 	bool forceMeasurement(bool als = true, bool ps = true);
-	bool pauseMeasurements(bool als = true, bool ps = true);
-	bool startMeasurements(bool als = true, bool ps = true);
+	bool startAutonomousMeasurements(bool als = true, bool ps = true);
+	bool pauseAutonomousMeasurements(bool als = true, bool ps = true);
 
 	bool readAllMeasurements(Si114x_MEASUREMENTS* measurements);
 	bool readAlsVis(uint* alsVis);
