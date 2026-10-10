@@ -160,7 +160,7 @@ public:
 
 ## Overriding `configureChip()` for Custom Configuration
 
-To avoid modifying the library file, and to provide a kind of configuration template, a class can be derived from Si114xSensor and the `configureChip()` method is overridden in the derived class. The derived class also adds calculation of the `pollTime` value so it does not poll the chip faster than is necessary when waiting for new readings.
+To avoid modifying the library file, and to provide a kind of configuration template, a class can be derived from `Si114xSensor` and the `configureChip()` method is overridden in the derived class. The derived class also adds calculation of the `pollTime` value so it does not poll the chip faster than is necessary when waiting for new readings.
 
 These features are illustrated in the example sketch. 
 
