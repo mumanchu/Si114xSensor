@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Example Sketch for Si114xSensor Library
-// Copyright (C) 2026.10.09, https://muman.ch and https://github.com/mumanchu
+// Copyright (C) 2026.10.10, https://muman.ch and https://github.com/mumanchu
 // If you re-use this software, please include the above copyright notice
-// (and wire me a huge pile of cash ;-)
+// (and wire me a huge pile of cash :-)
 
 #include <Wire.h>
 
@@ -44,35 +44,23 @@ bool MySi114x::configureChip()
 		// VDD_VOLTAGE does not work on PSx_ADCMUX unless PS_RANGE=high
 		PS1_ADCMUX, NO_PHOTODIODE,			// NO_PHOTODIODE = REF, p28
 		PS2_ADCMUX, GND_VOLTAGE,			// how to "reference to GND"?
-		PS3_ADCMUX, TEMPERATURE,			// e.g. 0x429E
+		PS3_ADCMUX, TEMPERATURE,			// how to use the temperature?
 		//ALS_VIS_ADCMUX is hard-wired to SMALL_VISIBLE
 		ALS_IR_ADCMUX, SMALL_IR,
 		//AUX_ADCMUX, TEMPERATURE,			// AUX is used for UV Index, EN_UV
 
-		/* To test TEMPERATURE
-		// Enable channels
-		CHLIST, EN_PS1 | EN_PS2 | EN_PS3 | EN_ALS_VIS | EN_ALS_IR | EN_AUX,
-
-		// MUX selection, see diagram p28
-		PS1_ADCMUX, TEMPERATURE,
-		PS2_ADCMUX, TEMPERATURE,
-		PS3_ADCMUX, TEMPERATURE,
-		//ALS_VIS_ADCMUX is hard-wired to SMALL_VISIBLE
-		ALS_IR_ADCMUX, SMALL_IR,
-		AUX_ADCMUX, TEMPERATURE,
-		*/
-	
 		// no PS LEDs
 		PSLED12_SELECT, 0,
 
 		// PS channels not used, they work as ADC channels
 		PS_ADC_MISC, 0b00000000,			// xxrxxmxx, r=PS_RANGE (1=high), m : 0=PS_ADC_MODE
+
 		// Recommended PS_ADC_REC value 'rrr' is 1's complement of PS_ADC_GAIN
 		//PS_ADC_COUNTER, 0b00000000,		// xrrrxxxx, ADC recovery period before making PS measurement, p53
 		//PS_ADC_GAIN, 0b00000000,			// xxxxxggg, IR LED pulse width and ADC integration time, p54
 
 		// Alignment: 1=LS 16 bits, 0=MS 16 bits (default)
-		//PS_ENCODING, 0b01110000,			// x321xxxx, 3=PS3, 2=PS2, 1=PS1
+		//PS_ENCODING, 0b00000000,			// x321xxxx, 3=PS3, 2=PS2, 1=PS1
 		//ALS_ENCODING, 0b00000000,			// xxivxxxx, i=IR alignment, v=VIS alignment
 		//there is no AUX_ENCODING
 
@@ -110,7 +98,7 @@ bool MySi114x::configureChip()
 
 	// start autonomous conversion mode at MEAS_RATE
 	// poll with readIRQStatus()
-	if (!startMeasurements())
+	if (!startAutonomousMeasurements())
 		return false;
 
 	return true;
@@ -213,7 +201,7 @@ void pollSi1145()
 		uint16_t ps1;		// NO_PHOTODIODE
 		uint16_t ps2;		// GND_VOLTAGE
 		uint16_t ps3;		// TEMPERATURE
-		uint16_t aux;		// VDD_VOLTAGE
+		uint16_t aux;		// UV INDEX
 	} Si114x_MEASUREMENTS;
 	*/
 
@@ -231,7 +219,7 @@ void pollSi1145()
 		m.ps1,		// NO_PHOTODIODE
 		m.ps2,		// GND_VOLTAGE
 		m.ps3,		// TEMPERATURE
-		m.aux,		// VDD_VOLTAGE
+		m.aux,		// UV INDEX
 		lux);
 	Serial.println();
 	Serial.println(buf);
@@ -267,7 +255,7 @@ void pollSi1145()
 		// in autonomous mode, start a new set of readings
 		// this takes a new set of readings immediately, making automaticGainControl() very fast
 		pollStart = 0;				// immediate poll on next call
-		si1145.startMeasurements();
+		si1145.startAutonomousMeasurements();
 		// (if using forced mode, call forceMeasurement())
 	}
 }
