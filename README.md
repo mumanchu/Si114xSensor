@@ -206,7 +206,7 @@ https://github.com/Seeed-Studio/Grove_Sunlight_Sensor
 
 | Date  | Revision | Description |
 |:---------- |:---------|:----------- |
-| 2026.10.09 | 0.0.0	| Preiminary |
+| 2026.10.09 | 0.0.0	| Preliminary |
 
 <br/>
 
