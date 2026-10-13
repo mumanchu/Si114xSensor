@@ -195,7 +195,7 @@ https://github.com/Seeed-Studio/Grove_Sunlight_Sensor \
 https://learn.adafruit.com/adafruit-si1145-breakout-board-uv-ir-visible-sensor
 
 **Other Libraries** \
-For reference. These may not handle certain configuration changes, like 16/17 bit alignment, etc. \
+For reference. These may not handle certain configuration changes, like 16/17 bit alignment, etc. Some are "minimalist", only supporting the reading/writing of registers and parameters. \
 https://github.com/adafruit/Adafruit_SI1145_Library \
 https://github.com/wollewald/SI1145_WE/tree/master \
 https://github.com/HGrabas/SI1145/tree/master \
